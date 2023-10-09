@@ -1,0 +1,4 @@
+name: colony
+version: '${version}'
+main: colony.colony.Colony
+api-version: '1.20'
