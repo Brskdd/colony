@@ -24,7 +24,8 @@ public class SummonCitizen implements Listener {
                 Bukkit.broadcastMessage("citizen summoned");
                 Location location;
                 location = event.getPlayer().getLocation();
-                new Citizen(location);
+                Citizen citizen = new Citizen(location);
+
             }
         }
     }
