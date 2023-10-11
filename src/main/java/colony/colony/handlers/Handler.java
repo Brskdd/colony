@@ -15,6 +15,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -83,24 +84,13 @@ public class Handler implements Listener {
             Bukkit.broadcastMessage(citizen.toString());
             Bukkit.broadcastMessage(towns.toString());
             Town parentTown = null;
-            for (Town x : towns) {
-                Bukkit.broadcastMessage(x.toString());
-                /*if (x.GetMembers().contains(citizen)) {
-                    Bukkit.broadcastMessage("already in town");
-                    parentTown = x;
-                }*/
+            if (citizen.getOwner() == null) {
+                citizen.setOwner(event.getPlayer().getUniqueId());
+                Bukkit.broadcastMessage("setting owner to " + event.getPlayer().toString());
+            } else {
+                Bukkit.broadcastMessage("owner is " + citizen.getOwner().toString());
+                citizen.getStand().setCustomName(Bukkit.getPlayer(event.getPlayer().getUniqueId()).getName());
             }
-            /*if (parentTown == null) {
-                Bukkit.broadcastMessage("no parent town");
-                for (Town x : towns) {
-                    if (x.GetOwner().equals(event.getPlayer().getUniqueId())) {
-                        Bukkit.broadcastMessage("adding to town");
-                        List<Citizen> citizenList = x.GetMembers();
-                        citizenList.add(citizen);
-                        x.SetMembers(citizenList);
-                    }
-                }
-            }*/
         }
     }
 }

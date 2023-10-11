@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Citizen {
 
@@ -21,7 +22,7 @@ public class Citizen {
         return standtocitizen;
     }
 
-
+    private UUID owner;
 
     private final ArmorStand entity;
     private int level;
@@ -91,6 +92,14 @@ public class Citizen {
 
     public ArmorStand getStand() {
         return entity;
+    }
+
+    public void setOwner(UUID uuid) {
+        owner = uuid;
+    }
+
+    public UUID getOwner() {
+        return owner;
     }
 
 }
