@@ -76,7 +76,7 @@ public class Handler implements Listener {
 
     @EventHandler
     public void claimcitizen(PlayerInteractAtEntityEvent event) {
-        Bukkit.broadcastMessage("claimtest");
+        //Bukkit.broadcastMessage("claimtest");
         if (event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
             ArmorStand entity = (ArmorStand) event.getRightClicked();
             Bukkit.broadcastMessage(entity.toString());
