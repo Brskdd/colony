@@ -2,6 +2,7 @@ package colony.colony.handlers;
 
 import colony.colony.Citizen;
 import colony.colony.Colony;
+import colony.colony.Town.Town;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -22,10 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 import static colony.colony.Citizen.getMap;
+import static colony.colony.Citizen.standtocitizen;
 
 
 public class Handler implements Listener {
     public List<String> createtownrequests = new ArrayList<>();
+
+    public List<Town> towns = new ArrayList<>();
     public Handler(Colony plugin) {
         Bukkit.getPluginManager().registerEvents((Listener) this, (Plugin) plugin);
     }
@@ -50,21 +54,21 @@ public class Handler implements Listener {
     @EventHandler
     public void printcreatetownrequests(AsyncPlayerChatEvent event) {
         if (event.getMessage().equals("a")) {
-            for (String i : createtownrequests) {
-                Bukkit.broadcastMessage(i);
-            }
-            Map<ArmorStand, Citizen> readmap = getMap();
-            for (Map.Entry<ArmorStand, Citizen> thing : readmap.entrySet()) {
-                Bukkit.broadcastMessage("key " + thing.getKey() + " value " + thing.getValue());
-            }
+            event.setCancelled(true);
+            Bukkit.broadcastMessage(getMap().toString());
+
         }
     }
     @EventHandler
     public void playerrequestsmaketown(AsyncPlayerChatEvent event) {
-        createtownrequests.remove(event.getPlayer().getUniqueId().toString());
-        if (event.getMessage().equals("Y")) {
-            if (createtownrequests.contains(event.getPlayer().getUniqueId().toString())) {
+        if (createtownrequests.contains(event.getPlayer().getUniqueId().toString())) {
+            createtownrequests.remove(event.getPlayer().getUniqueId().toString());
+            event.setCancelled(true);
+            if (event.getMessage().equals("Y")) {
                 Bukkit.broadcastMessage(event.getPlayer().toString() + " wants to make a town");
+                Town town = new Town();
+                town.SetOwner(event.getPlayer().getUniqueId());
+                towns.add(town);
             }
         }
     }
@@ -73,11 +77,30 @@ public class Handler implements Listener {
     public void claimcitizen(PlayerInteractAtEntityEvent event) {
         Bukkit.broadcastMessage("claimtest");
         if (event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
-            Citizen citizen = Citizen.standtocitizen.get(event.getRightClicked());
-            if (citizen != null) {
-                Bukkit.broadcastMessage("citizen found");
+            ArmorStand entity = (ArmorStand) event.getRightClicked();
+            Bukkit.broadcastMessage(entity.toString());
+            Citizen citizen = getMap().get(entity);
+            Bukkit.broadcastMessage(citizen.toString());
+            Bukkit.broadcastMessage(towns.toString());
+            Town parentTown = null;
+            for (Town x : towns) {
+                Bukkit.broadcastMessage(x.toString());
+                /*if (x.GetMembers().contains(citizen)) {
+                    Bukkit.broadcastMessage("already in town");
+                    parentTown = x;
+                }*/
             }
-            Bukkit.broadcastMessage(citizen.getStand().getLocation().toString());
+            /*if (parentTown == null) {
+                Bukkit.broadcastMessage("no parent town");
+                for (Town x : towns) {
+                    if (x.GetOwner().equals(event.getPlayer().getUniqueId())) {
+                        Bukkit.broadcastMessage("adding to town");
+                        List<Citizen> citizenList = x.GetMembers();
+                        citizenList.add(citizen);
+                        x.SetMembers(citizenList);
+                    }
+                }
+            }*/
         }
     }
 }

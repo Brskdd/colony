@@ -40,7 +40,7 @@ public class Citizen {
         entity.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
         entity.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
         entity.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS));
-        standtocitizen.put(entity,this);
+        standtocitizen.put(entity, this);
     }
     public String getName() {
         return entity.getCustomName();
