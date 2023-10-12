@@ -2,14 +2,12 @@ package colony.colony;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +24,7 @@ public class Citizen {
 
     private final ArmorStand entity;
     private int level;
-
+    private entityai ai;
     private int ID;
 
     public Citizen(Location location) {
@@ -42,6 +40,20 @@ public class Citizen {
         entity.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
         entity.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS));
         standtocitizen.put(entity, this);
+        ai = new entityai(entity);
+    }
+    private class entityai extends BukkitRunnable {
+        private final ArmorStand armorStand;
+
+        public entityai(ArmorStand armorStand) {
+            this.armorStand = armorStand;
+        }
+
+        @Override
+        public void run() {
+            Bukkit.broadcastMessage(armorStand.getWorld().toString());
+            armorStand.teleport(new Location(armorStand.getWorld(), armorStand.getLocation().getX(), armorStand.getLocation().getY() + 1, armorStand.getLocation().getZ()));
+        }
     }
     public String getName() {
         return entity.getCustomName();
