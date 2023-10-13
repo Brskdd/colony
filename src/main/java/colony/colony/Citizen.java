@@ -28,6 +28,7 @@ public class Citizen {
     private final ArmorStand entity;
     private int level;
     private int ID;
+    private entityai ai;
 
     public Citizen(Location location) {
         entity = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
@@ -43,7 +44,7 @@ public class Citizen {
         entity.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS));
         standtocitizen.put(entity, this);
         Bukkit.broadcastMessage("entity exists " + entity.toString());
-        entityai ai = new entityai(entity);
+        ai = new entityai(entity);
         Bukkit.broadcastMessage("ai exists " + ai.toString());
     }
 
@@ -52,9 +53,18 @@ public class Citizen {
         public entityai(ArmorStand armorStand) {
             Bukkit.broadcastMessage("skibidi toilet");
             BukkitTask task = new BukkitRunnable() {
+                int mode = 0;
+
 
                 @Override
                 public void run() {
+                    switch (mode) {
+                        case 0:
+                            //idle around
+                        break;
+                        case 1:
+                            //follow player
+                    }
                     armorStand.teleport(Bukkit.getPlayer(getMap().get(armorStand).getOwner()).getLocation());
                 }
             }.runTaskTimer(Colony.plugin,0,10);
@@ -64,6 +74,8 @@ public class Citizen {
 
 
     }
+
+    public entityai getAI() {return ai;}
     public String getName() {
         return entity.getCustomName();
     }
