@@ -7,7 +7,10 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +27,6 @@ public class Citizen {
 
     private final ArmorStand entity;
     private int level;
-    private entityai ai;
     private int ID;
 
     public Citizen(Location location) {
@@ -40,20 +42,27 @@ public class Citizen {
         entity.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
         entity.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS));
         standtocitizen.put(entity, this);
-        ai = new entityai(entity);
+        Bukkit.broadcastMessage("entity exists " + entity.toString());
+        entityai ai = new entityai(entity);
+        Bukkit.broadcastMessage("ai exists " + ai.toString());
     }
-    private class entityai extends BukkitRunnable {
-        private final ArmorStand armorStand;
+
+    private static class entityai {
 
         public entityai(ArmorStand armorStand) {
-            this.armorStand = armorStand;
+            Bukkit.broadcastMessage("skibidi toilet");
+            BukkitTask task = new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    armorStand.teleport(Bukkit.getPlayer(getMap().get(armorStand).getOwner()).getLocation());
+                }
+            }.runTaskTimer(Colony.plugin,0,10);
         }
 
-        @Override
-        public void run() {
-            Bukkit.broadcastMessage(armorStand.getWorld().toString());
-            armorStand.teleport(new Location(armorStand.getWorld(), armorStand.getLocation().getX(), armorStand.getLocation().getY() + 1, armorStand.getLocation().getZ()));
-        }
+
+
+
     }
     public String getName() {
         return entity.getCustomName();
