@@ -108,12 +108,13 @@ public class Handler implements Listener {
                 if (event.getPlayer().getInventory().getItemInMainHand().getType() == Material.PAPER) {
                     Bukkit.broadcastMessage("opening ui");
                     Inventory menu = Bukkit.createInventory(null, 9, "Citizen Options");
-                    event.getPlayer().openInventory(menu);
                     ItemStack setzone = new ItemStack(Material.BARRIER);
                     ItemMeta zonemeta = setzone.getItemMeta();
                     zonemeta.setDisplayName("Set Work Zone");
                     setzone.setItemMeta(zonemeta);
+                    menu.setItem(0, setzone);
                     entityui.put(event.getPlayer().getUniqueId(), entity);
+                    event.getPlayer().openInventory(menu);
                 }
 
             }
