@@ -12,9 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Citizen {
 
@@ -29,6 +27,8 @@ public class Citizen {
     private int level;
     private int ID;
     private entityai ai;
+
+    private List<Integer> workzone;
 
     public Citizen(Location location) {
         entity = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
@@ -46,15 +46,15 @@ public class Citizen {
         Bukkit.broadcastMessage("entity exists " + entity.toString());
         ai = new entityai(entity);
         Bukkit.broadcastMessage("ai exists " + ai.toString());
+        workzone = new ArrayList<>();
     }
 
     private static class entityai {
 
         public entityai(ArmorStand armorStand) {
-            Bukkit.broadcastMessage("skibidi toilet");
             BukkitTask task = new BukkitRunnable() {
-                int mode = 0;
-
+                int mode = 2;
+                Citizen citizen = getMap().get(armorStand);
 
                 @Override
                 public void run() {
@@ -64,8 +64,26 @@ public class Citizen {
                         break;
                         case 1:
                             //follow player
+                        break;
+                        case 2:
+                            //town ai
+                            //if no home find
+                            //if no food find
+                            List<Integer> workzone = citizen.getWorkzone();
+                            if (workzone != null) {
+                                if (workzone.size() == 4) {
+                                    armorStand.teleport(new Location(armorStand.getWorld(),
+                                            (workzone.get(0) + workzone.get(2)) / 2.0, // Average of X coordinates
+                                            armorStand.getLocation().getY(),
+                                            (workzone.get(1) + workzone.get(3)) / 2.0  // Average of Z coordinates
+                                    ));
+                                }
+                            }
+
+
+                            break;
                     }
-                    armorStand.teleport(Bukkit.getPlayer(getMap().get(armorStand).getOwner()).getLocation());
+                    //armorStand.teleport(Bukkit.getPlayer(getMap().get(armorStand).getOwner()).getLocation());
                 }
             }.runTaskTimer(Colony.plugin,0,10);
         }
@@ -133,6 +151,13 @@ public class Citizen {
 
     public UUID getOwner() {
         return owner;
+    }
+
+    public List<Integer> getWorkzone() {
+        return workzone;
+    }
+    public void  setWorkzone(List<Integer> list) {
+        workzone = list;
     }
 
 }
