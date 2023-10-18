@@ -117,6 +117,8 @@ public class Handler implements Listener {
                     event.getPlayer().openInventory(menu);
                 }
 
+            } else {
+                Bukkit.broadcastMessage("INITMAINUI CANNOT FIND CITIEN");
             }
         }
     }
@@ -125,7 +127,7 @@ public class Handler implements Listener {
         if (event.getView().getTitle().equals("Citizen Options")) {
             Bukkit.broadcastMessage("correct title");
             event.setCancelled(true);
-            ArmorStand entity = (ArmorStand) entityui.get(event.getWhoClicked());
+            ArmorStand entity = (ArmorStand) entityui.get(event.getWhoClicked().getUniqueId());
             Citizen citizen = getMap().get(entity);
             if (citizen != null) {
                 Bukkit.broadcastMessage("found citizen");
@@ -141,6 +143,8 @@ public class Handler implements Listener {
                     }
                 }
 
+            } else {
+                Bukkit.broadcastMessage("CANT FIND CITIZEN AAAAA");
             }
 
 
