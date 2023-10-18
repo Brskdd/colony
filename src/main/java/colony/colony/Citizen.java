@@ -30,6 +30,8 @@ public class Citizen {
 
     private List<Integer> workzone;
 
+    private Location home;
+
     public Citizen(Location location) {
         entity = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
         entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10);
@@ -47,6 +49,7 @@ public class Citizen {
         ai = new entityai(entity);
         Bukkit.broadcastMessage("ai exists " + ai.toString());
         workzone = new ArrayList<>();
+        home = entity.getLocation();
     }
 
     private static class entityai {
@@ -156,8 +159,15 @@ public class Citizen {
     public List<Integer> getWorkzone() {
         return workzone;
     }
-    public void  setWorkzone(List<Integer> list) {
+    public void setWorkzone(List<Integer> list) {
         workzone = list;
+    }
+
+    public Location gethome() {
+        return home;
+    }
+    public void sethome(Location location) {
+        home = location;
     }
 
 }

@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -32,6 +33,8 @@ public class Handler implements Listener {
     public List<String> createtownrequests = new ArrayList<>();
     public Map<UUID, ArmorStand> initworkzone = new HashMap<>();
     public Map<UUID, ArmorStand> finishworkzone = new HashMap<>();
+
+    public Map<UUID, ArmorStand> sethome = new HashMap<>();
 
     public Map<UUID, ArmorStand> entityui = new HashMap<>();
 
@@ -113,6 +116,12 @@ public class Handler implements Listener {
                     zonemeta.setDisplayName("Set Work Zone");
                     setzone.setItemMeta(zonemeta);
                     menu.setItem(0, setzone);
+                    ItemStack sethome = new ItemStack(Material.RED_BED);
+                    ItemMeta homemeta = sethome.getItemMeta();
+                    homemeta.setDisplayName("Set Home");
+                    sethome.setItemMeta(homemeta);
+                    menu.setItem(1, sethome);
+
                     entityui.put(event.getPlayer().getUniqueId(), entity);
                     event.getPlayer().openInventory(menu);
                 }
@@ -122,6 +131,7 @@ public class Handler implements Listener {
             }
         }
     }
+
     @EventHandler
     public void mainuimanage(InventoryClickEvent event) {
         if (event.getView().getTitle().equals("Citizen Options")) {
@@ -141,6 +151,14 @@ public class Handler implements Listener {
                         initworkzone.put(event.getWhoClicked().getUniqueId(),entity);
                         Bukkit.broadcastMessage("initworkzone is now " + initworkzone.toString());
                     }
+                }
+                if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Set Home")) {
+                    Bukkit.broadcastMessage("init home");
+                    if (!sethome.containsKey(event.getWhoClicked().getUniqueId())) {
+                        sethome.put(event.getWhoClicked().getUniqueId(), entity);
+                        event.getWhoClicked().sendMessage("click on bed to set home");
+                    }
+
                 }
 
             } else {
@@ -195,6 +213,23 @@ public class Handler implements Listener {
                     Bukkit.broadcastMessage(citizen.getWorkzone().toString());
                     event.getPlayer().sendMessage("Creating zone for " + citizen.getName() + " at " + citizen.getWorkzone().toString());
                     finishworkzone.remove(event.getPlayer().getUniqueId());
+                }
+            }
+        }
+    }
+    @EventHandler
+    public void sethomezone(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getPlayer().getInventory().getItemInMainHand().getType() == Material.STICK) {
+                if (event.getClickedBlock().getType() == Material.RED_BED) {
+                    if (sethome.containsKey(event.getPlayer().getUniqueId())) {
+                        event.setCancelled(true);
+                        Bukkit.broadcastMessage("setting entity home");
+                        ArmorStand entity = sethome.get(event.getPlayer().getUniqueId());
+                        Citizen citizen = getMap().get(entity);
+                        citizen.sethome(event.getClickedBlock().getLocation());
+                        sethome.remove(event.getPlayer().getUniqueId());
+                    }
                 }
             }
         }
