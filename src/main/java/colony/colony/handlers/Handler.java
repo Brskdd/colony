@@ -4,7 +4,9 @@ import colony.colony.Citizen;
 import colony.colony.Colony;
 import colony.colony.Town.Town;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -188,6 +190,7 @@ public class Handler implements Listener {
                     zone.add(event.getClickedBlock().getZ());
                     citizen.setWorkzone(zone);
                     initworkzone.remove(event.getPlayer().getUniqueId());
+                    event.getPlayer().getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, (Location) event.getClickedBlock().getLocation(), 100, 0, 1, 0, 0.2);
                     event.getPlayer().sendMessage("left click second corner of work zone");
                     Bukkit.broadcastMessage("finished firstworkzone");
                     Bukkit.broadcastMessage(citizen.getWorkzone().toString());
@@ -209,6 +212,7 @@ public class Handler implements Listener {
                     zone.add(event.getClickedBlock().getX());
                     zone.add(event.getClickedBlock().getZ());
                     citizen.setWorkzone(zone);
+                    event.getPlayer().getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, (Location) event.getClickedBlock().getLocation(), 100, 0, 1, 0, 0.2);
                     Bukkit.broadcastMessage("finished secondworkzone");
                     Bukkit.broadcastMessage(citizen.getWorkzone().toString());
                     event.getPlayer().sendMessage("Creating zone for " + citizen.getName() + " at " + citizen.getWorkzone().toString());
@@ -229,6 +233,7 @@ public class Handler implements Listener {
                         Citizen citizen = getMap().get(entity);
                         citizen.sethome(event.getClickedBlock().getLocation());
                         sethome.remove(event.getPlayer().getUniqueId());
+                        event.getPlayer().getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, (Location) event.getClickedBlock().getLocation(), 100, 0, 1, 0, 0.2);
                     }
                 }
             }
